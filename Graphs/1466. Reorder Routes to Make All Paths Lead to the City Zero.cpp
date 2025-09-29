@@ -45,3 +45,40 @@ public:
         return reorderCnt;
     }
 };
+
+//Appraoch 2:DFS
+
+class Solution {
+public:
+    int reorderCnt = 0;
+    void dfs(unordered_map<int, list<pair<int, int>>>& adjList,
+             vector<bool>& visited, int currCity) {
+        visited[currCity] = true;
+        for (auto& [neigh, needsReorder] : adjList[currCity]) {
+            if (!visited[neigh]) {
+                if (needsReorder ==
+                    1) { // road goes away from 0, needs reversal
+                    reorderCnt++;
+                }
+                dfs(adjList, visited, neigh);
+            }
+        }
+    }
+    int minReorder(int n, vector<vector<int>>& connections) {
+
+        unordered_map<int, list<pair<int, int>>> adjList;
+        for (auto& road : connections) {
+            int u = road[0];
+            int v = road[1];
+
+            adjList[u].push_back({v, 1}); // original road u->v
+            adjList[v].push_back({u, 0}); // fake/virtual road v->u
+        }
+
+        vector<bool> visited(n, false); // track visited cities
+        dfs(adjList, visited, 0);
+
+        return reorderCnt;
+    }
+};
+
