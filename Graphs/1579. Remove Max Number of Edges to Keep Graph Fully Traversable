@@ -1,0 +1,114 @@
+// Approach 1:DSU
+// T.C:	O(E log E)
+// Sorting edges	O(E log E)
+// DSU operations (find, union)	O(α(N)) ≈ O(1) (inverse Ackermann function)
+// Processing all edges	O(E)
+
+
+
+class Solution {
+public:
+    // Disjoint Set Union (Union-Find)
+    class DSU {
+    public:
+        int comp;           // number of connected components
+        vector<int> rank;   // rank (used for union by rank)
+        vector<int> parent; // parent array for each node
+
+        // Constructor: initialize DSU for n nodes
+        DSU(int n) {
+            rank.resize(n + 1, 0);
+            parent.resize(n + 1);
+            for (int i = 1; i <= n; i++) {
+                parent[i] = i; // each node is its own parent initially
+            }
+            comp = n; // initially n separate components
+        }
+
+        // Find the parent of a node with path compression
+        int find(int x) {
+            if (x == parent[x])
+                return x;
+            return parent[x] = find(parent[x]);
+        }
+
+        // Union two sets based on rank
+        void Union(int x, int y) {
+            int parent_x = find(x);
+            int parent_y = find(y);
+
+            // already in the same set
+            if (parent_x == parent_y)
+                return;
+
+            // attach smaller rank tree under larger rank tree
+            if (rank[parent_x] > rank[parent_y]) {
+                parent[parent_y] = parent_x;
+            } else if (rank[parent_x] < rank[parent_y]) {
+                parent[parent_x] = parent_y;
+            } else {
+                parent[parent_x] = parent_y;
+                rank[parent_y]++; // increase rank if equal
+            }
+
+            comp--; // one less component after merging
+        }
+    };
+
+    int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
+        DSU Alice(n);
+        DSU Bob(n);
+
+        // Sort edges so type 3 (shared by both) come first
+        sort(edges.begin(), edges.end(),
+             [](vector<int>& a, vector<int>& b) { return a[0] > b[0]; });
+
+        // if a node has both type 3 path and other individual path(1/2) ->
+        // ignore inidividual path -> process type 3 first
+
+        int edgeCnt = 0; // count of edges actually used
+
+        // Process all edges
+        for (auto& e : edges) {
+            int type = e[0];
+            int u = e[1];
+            int v = e[2];
+
+            if (type == 3) {
+                // type 3 edge usable by both Alice and Bob
+                bool used = false;
+                if (Alice.find(u) != Alice.find(v)) {
+                    Alice.Union(u, v);
+                    used = true;
+                }
+                if (Bob.find(u) != Bob.find(v)) {
+                    Bob.Union(u, v);
+                    used = true;
+                }
+                // if edge is used by any one of them ->incrment edgeCnt(By only
+                // once->cuz ,edge is one only->we are just using it in two
+                // places)
+                if (used)
+                    edgeCnt++;
+            } else if (type == 1) {
+                // type 1 edge usable only by Alice
+                if (Alice.find(u) != Alice.find(v)) {
+                    Alice.Union(u, v);
+                    edgeCnt++;
+                }
+            } else {
+                // type 2 edge usable only by Bob
+                if (Bob.find(u) != Bob.find(v)) {
+                    Bob.Union(u, v);
+                    edgeCnt++;
+                }
+            }
+        }
+
+        // Both graphs must be fully connected
+        if (Alice.comp == 1 && Bob.comp == 1)
+            return edges.size() - edgeCnt; // removable edges
+        else
+            return -1; // not possible to connect both fully
+    }
+};
