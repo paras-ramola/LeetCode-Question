@@ -8,6 +8,7 @@
 // T.C: In the worst case, we may explore all permutations, but pruning significantly reduces the search space.
 // Practically, it is much faster than O(n!) because we skip branches that cannot exceed target.
 // The exact worst-case is difficult to express, but the effective complexity is much less than O(n!).
+// Practical: Strong pruning + early stop O(26 × n) (since we only try a few characters per position)
 
 Approach Link:( https://leetcode.com/problems/lexicographically-smallest-permutation-greater-than-target/solutions/7285227/backtracking-pruning-cpp-easy-to-underst-6522 )
 
