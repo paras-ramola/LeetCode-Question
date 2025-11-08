@@ -1,4 +1,16 @@
-// T.C:0(n log n)
+
+
+// | Property              | Meaning                            | Merge Sort Behavior | Notes                          |
+// | --------------------- | ---------------------------------- | ------------------- | ------------------------------ |
+// | **Stable**            | Keeps equal elements in same order | ✅ Yes               | By default                     |
+// | **In-place**          | Uses small extra memory            | ❌ No                | Uses O(n) extra memory         |
+// | **Adaptive**          | Faster if input partially sorted   | ❌ No                | Always O(n log n)              |
+// | **Internal/External** | Works in memory or disk            | ✅ Both              | Very good for external sorting |
+// | **Recursive**         | Uses recursion                     | ✅ Yes               | Can be implemented iteratively |
+// | **Worst-case**        | Maximum runtime                    | O(n log n)          | Always guaranteed              |
+
+
+// T.C:0(n log n) (ALWAYS)
 
 class Solution {
 public:
