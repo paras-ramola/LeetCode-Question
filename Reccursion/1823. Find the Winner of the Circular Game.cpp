@@ -120,3 +120,30 @@ public:
     }
 };
 
+
+// Appraoch 4:Iteractive/Josephus 
+// T.C:0(1)
+// S.C:0(1)
+
+class Solution {
+public:
+    int findTheWinner(int n, int k) {
+
+        // idx stores the winner INDEX (0-based)
+        // When there is only 1 person, winner index is 0
+        int idx = 0;
+
+        // Build the solution from 1 person up to n people
+        for (int i = 1; i <= n; i++) {
+
+            // When the i-th person is added to the circle,
+            // the winner position shifts by k steps
+            // % i keeps the index within the current circle size
+            idx = (idx + k) % i;
+        }
+
+        // Convert 0-based index to 1-based friend number
+        return idx + 1;
+    }
+};
+
