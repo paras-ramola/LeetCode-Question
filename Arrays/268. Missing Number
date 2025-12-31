@@ -1,0 +1,45 @@
+// Approach 1: Sum 
+// T.C:0(n)
+// sum of all elements in the range[0,n].
+// sum of nums.
+// If we subtrate both we will get the missing number
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+
+        int total_sum = 0;
+        for (int i = 0; i <=nums.size(); i++) {
+            total_sum += i;
+        }
+        int arr_sum = accumulate(nums.begin(), nums.end(), 0);
+        return total_sum - arr_sum;
+    }
+};
+
+// Approach 2: XOR
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+
+        // XOR of same elements becomes 0
+        // So duplicate values cancel each other
+
+        int arr_xor = 0;
+
+        // XOR all elements present in the array
+        for (int i = 0; i < nums.size(); i++) {
+            arr_xor ^= nums[i];
+        }
+
+        int total_xor = 0;
+
+        // XOR all numbers from 0 to n (or 1 to n works here)
+        for (int i = 1; i <= nums.size(); i++) {
+            total_xor ^= i;
+        }
+
+        // Missing number = XOR of above two results
+        return total_xor ^ arr_xor;
+    }
+};
