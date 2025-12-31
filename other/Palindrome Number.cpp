@@ -1,3 +1,6 @@
+// Palindrome same number original & reverse
+
+
 //Approach 1: Math approach (reverse the number)
 // T.C: O(d) where d = number of digits= log₁₀(n)
 // S.C:0(1)
