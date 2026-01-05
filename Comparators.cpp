@@ -110,3 +110,15 @@ int main()
 // [] → capture clause (captures variables from surrounding scope if needed).
 
 // auto must be used for lambdas because the type is compiler-generated.
+
+
+
+
+
+// Sort by second then first
+sort(v.begin(), v.end(), [](auto &a, auto &b) {
+    if (a.second == b.second)
+        return a.first < b.first;
+    return a.second < b.second;
+});
+
