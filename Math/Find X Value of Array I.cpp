@@ -60,6 +60,102 @@ Kyuki: (a * b) % k = ((a % k) * (b % k)) % k
 //  2) Purane saare subarrays ko current element se "extend" kiya jata hai
 
 
+//     # Dry Run: Count Subarrays by Product % k
+
+Example  `nums = [1,2,3,4,5]`, `k = 3` 
+
+// * `res = [0,0,0]`, `prev = [0,0,0]` (index 0,1,2 = remainder 0,1,2 ka count)
+// ## Step 1: val = 1 (rem = 1)
+
+// | | rem0 | rem1 | rem2 |
+// prev (pehle se) 
+//     | 0 | 0 | 0 |
+
+// - Naya subarray `[1]` → currRem = 1 → `curr[1]++`
+// - Extend loop: prev sab 0 hai, kuch extend nahi hoga
+
+// | | rem0 | rem1 | rem2 |
+// |---|---|---|---|
+// | curr | 0 | **1** | 0 |
+
+// `res = [0,1,0]`  →  `prev = [0,1,0]`
+
+// ---
+
+// ## Step 2: val = 2 (rem = 2)
+
+// | | rem0 | rem1 | rem2 |
+// |---|---|---|---|
+// | prev | 0 | 1 | 0 |
+
+// - Naya subarray `[2]` → `curr[2]++` → curr = [0,0,1]
+// - Extend: `prev[1]=1>0` → purana rem `1`, naya rem = `(1*2)%3 = 2` → `curr[2] += 1`
+
+// | | rem0 | rem1 | rem2 |
+// |---|---|---|---|
+// | curr | 0 | 0 | **2** |
+
+// (matlab `[2]` aur `[1,2]` dono ka product%3 = 2 nikla)
+
+// `res = [0,1,0]+[0,0,2] = [0,1,2]`  →  `prev = [0,0,2]`
+
+// ---
+
+// ## Step 3: val = 3 (rem = 0)
+
+// | | rem0 | rem1 | rem2 |
+// |---|---|---|---|
+// | prev | 0 | 0 | 2 |
+
+// - Naya subarray `[3]` → `curr[0]++` → curr = [1,0,0]
+// - Extend: `prev[2]=2>0` → naya rem = `(2*0)%3 = 0` → `curr[0] += 2`
+
+// | | rem0 | rem1 | rem2 |
+// |---|---|---|---|
+// | curr | **3** | 0 | 0 |
+
+// (ye 3 subarrays hain: `[3]`, `[2,3]`, `[1,2,3]` — sabme 3 present hai isiliye product÷3 se poora divide, rem=0)
+
+// `res = [0,1,2]+[3,0,0] = [3,1,2]`  →  `prev = [3,0,0]`
+
+// ---
+
+// ## Step 4: val = 4 (rem = 1)
+
+// | | rem0 | rem1 | rem2 |
+// |---|---|---|---|
+// | prev | 3 | 0 | 0 |
+
+// - Naya subarray `[4]` → `curr[1]++` → curr = [0,1,0]
+// - Extend: `prev[0]=3>0` → naya rem = `(0*1)%3 = 0` → `curr[0] += 3`
+
+// | | rem0 | rem1 | rem2 |
+// |---|---|---|---|
+// | curr | **3** | **1** | 0 |
+
+// `res = [3,1,2]+[3,1,0] = [6,2,2]`  →  `prev = [3,1,0]`
+
+// ---
+
+// ## Step 5: val = 5 (rem = 2)
+
+// | | rem0 | rem1 | rem2 |
+// |---|---|---|---|
+// | prev | 3 | 1 | 0 |
+
+// - Naya subarray `[5]` → `curr[2]++` → curr = [0,0,1]
+// - Extend `x=0`: `prev[0]=3>0` → naya rem = `(0*2)%3=0` → `curr[0] += 3`
+// - Extend `x=1`: `prev[1]=1>0` → naya rem = `(1*2)%3=2` → `curr[2] += 1`
+
+// | | rem0 | rem1 | rem2 |
+// |---|---|---|---|
+// | curr | **3** | 0 | **2** |
+
+// `res = [6,2,2]+[3,0,2] = [9,2,4]` 
+
+// ---
+
+
 class Solution {
 public:
 
